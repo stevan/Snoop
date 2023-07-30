@@ -8,6 +8,9 @@ use Snoop::Core::AST;
 
 class Snoop::Parser {
 
+    use constant OBJECT_MARKER => 1;
+    use constant ARRAY_MARKER  => 2;
+
     field @stack;
 
     method accumulated_nodes { @stack }
@@ -16,13 +19,13 @@ class Snoop::Parser {
 
         foreach my $token (@tokens) {
             if ( $token isa Snoop::Core::Token::StartObject ) {
-                push @stack => {};
+                push @stack => OBJECT_MARKER;
             }
             elsif ( $token isa Snoop::Core::Token::EndObject ) {
                 my $i = 0;
                 my @properties;
                 while (@stack) {
-                    if (ref $stack[-1] eq 'HASH') {
+                    if ($stack[-1] == OBJECT_MARKER) {
                         pop @stack;
                         last;
                     }
@@ -45,13 +48,13 @@ class Snoop::Parser {
                 ;
             }
             elsif ( $token isa Snoop::Core::Token::StartArray ) {
-                push @stack => [];
+                push @stack => ARRAY_MARKER;
             }
             elsif ( $token isa Snoop::Core::Token::EndArray ) {
                 my $i = 0;
                 my @items;
                 while (@stack) {
-                    if (ref $stack[-1] eq 'ARRAY') {
+                    if ($stack[-1] == ARRAY_MARKER) {
                         pop @stack;
                         last;
                     }

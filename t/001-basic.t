@@ -51,10 +51,27 @@ isa_ok($_, 'Snoop::Core::AST') foreach @nodes;
 is_deeply([ $nodes[0]->to_Perl ], [ $AST->to_Perl ], '... parsed is the same as original (in Perl)');
 is($nodes[0]->to_JSON, $AST->to_JSON, '... parsed is the same as original (in JSON)');
 
-warn $AST->to_JSON, "\n";
-warn Dumper $AST->to_Perl;
-warn Dumper [ map { blessed($_).($_->can('value') ? ' ['.$_->value.']' : '') } @tokens ];
-warn Dumper [ map { $_->to_Perl } @nodes ];
+is_deeply(
+    [ $AST->to_Perl ],
+    [
+          {
+            'foo' => 'bar',
+            'baz' => [
+                       10,
+                       '2.1',
+                       1,
+                       0,
+                       undef
+                     ]
+          }
+    ],
+    '... got the expected results'
+);
+
+#warn $AST->to_JSON, "\n";
+#warn Dumper $AST->to_Perl;
+#warn Dumper [ map { blessed($_).($_->can('value') ? ' ['.$_->value.']' : '') } @tokens ];
+#warn Dumper [ map { $_->to_Perl } @nodes ];
 
 done_testing;
 

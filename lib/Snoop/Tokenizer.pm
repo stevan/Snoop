@@ -12,9 +12,9 @@ class Snoop::Tokenizer {
     use constant IN_PROPERTY => 3;
     use constant IN_ITEM     => 4;
 
-    field @stack;
-    field @context;
-    field @chars;
+    field @stack;    # the token stack
+    field @context;  # the current context (see constants above)
+    field @chars;    # current buffer we are working with
 
     method accumulated_tokens { @stack }
 
@@ -192,7 +192,7 @@ class Snoop::Tokenizer {
             }
         }
 
-        return ();
+        return;
     }
 }
 
